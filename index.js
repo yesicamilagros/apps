@@ -14,7 +14,7 @@ app.listen(process.env.PORT,()=>{
 
 );
 
-app.get("/weebhook",(req,res)=>{
+app.get("/webhook",(req,res)=>{
    let mode = req.query["hub.mode"];
    let challenge= req.query["hub.challenge"];
    let token= req.query["hub.verify_token"];
@@ -31,7 +31,7 @@ app.get("/weebhook",(req,res)=>{
    }
 });
 
-app.post("/weebhook",(req,res)=>{
+app.post("/webhook",(req,res)=>{
     let body_param=req.body;
     console.log(JSON.stringify(body_param,null,2));
 
