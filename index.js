@@ -321,5 +321,5 @@ const chatMessages = [
       temperature: 0.5,
       frequency_penalty: 0.5,
     });
-    return response.choices[0].messages.content;
+    return response.choices[0].message.content;
   }
