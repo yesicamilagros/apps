@@ -108,7 +108,7 @@ app.post("/webhook", async (req, res) => {
 
 
 
-                await reply(body.Body);//await sendInteractiveMessage(from, phone_number_id);
+                await reply(textBody);//await sendInteractiveMessage(from, phone_number_id);
 
 
 
@@ -321,5 +321,5 @@ const chatMessages = [
       temperature: 0.5,
       frequency_penalty: 0.5,
     });
-    return response.choices[0].body.content;
+    return response.choices[0].messages.content;
   }
