@@ -106,9 +106,10 @@ app.post("/webhook", async (req, res) => {
             } else {
                 // Si no es botón, mandamos el mensaje con los botones
 
+             const aiResponse = await reply(textBody);
+             await sendTextMessage(from, phone_number_id, aiResponse);
 
-
-                await reply(textBody);//await sendInteractiveMessage(from, phone_number_id);
+                //await reply(textBody);//await sendInteractiveMessage(from, phone_number_id);
 
 
 
