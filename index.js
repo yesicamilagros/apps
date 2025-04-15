@@ -313,7 +313,8 @@ const chatMessages = [
   async function reply(msg) {
     chatMessages.push({
       role: 'user',
-      content: msg,
+      content: `Si aquí: ${msg} te preguntan quién eres o qué haces, podrías decirle que eres un chatbot de Depilzone, que estás disponible para cualquier duda. Depilzone es una clínica de cuidado de piel.`,
+
     });
     const response = await openai.chat.completions.create({
       messages: chatMessages,
