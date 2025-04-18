@@ -79,7 +79,7 @@ app.post("/webhook", async (req, res) => {
                         break;
                     case "btn_opcion_2":
                        
-                        await sendTextMessage(from, phone_number_id, sendasesor);
+                        await sendasesor(from, phone_number_id);
                         break;
                     case "btn_opcion_3":
                         await sendTextMessage(from, phone_number_id, "Aquí puedes ver nuestros servicios: depilzone.com/servicios");
