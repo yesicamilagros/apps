@@ -100,6 +100,15 @@ app.post("/webhook", async (req, res) => {
                         await sendTextMessage(from, phone_number_id, `Tu cita ha sido registrada para las ${buttonReplyID.split('_')[1].toUpperCase().replace('AM', ' AM').replace('PM', ' PM')}. ¡Gracias!`);
                         break;
 
+                    case "ases_mensaje":
+                        await sendTextMessage(to, phone_number_id, "Puedes contactarnos por WhatsApp en este enlace: https://wa.me/1234567890");
+                        break;
+                    
+                    case "ases_llamada":
+                        await sendTextMessage(to, phone_number_id, "Llámanos al +913850688");
+                        break;
+
+
                     
                     default:
                         await sendTextMessage(from, phone_number_id, "Opción no reconocida.");
