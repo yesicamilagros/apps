@@ -326,18 +326,14 @@ async function sendasesor(to, phone_number_id) {
                     action: {
                         buttons: [
                             {
-                                type: "reply",
-                                reply: {
-                                    id: "ases_mensaje",
-                                    title: "10:00 AM"
-                                }
+                                "type": "url",
+                                "url": "https://wa.me/1234567890",
+                                "title": "WhatsApp"
                             },
                             {
-                                type: "reply",
-                                reply: {
-                                    id: "ases_llamada",
-                                    title: "12:00 PM"
-                                }
+                                "type": "call",
+                            "phone_number": "+51936696634",
+                            "title": "Llamada"
                             }
                         ]
                     }
