@@ -106,10 +106,14 @@ app.post("/webhook", async (req, res) => {
             } else {
                 // Si no es botón, mandamos el mensaje con los botones
 
-             const aiResponse = await reply(textBody);
-             await sendTextMessage(from, phone_number_id, aiResponse);
+         //if (){
+             
+           //  const aiResponse = await reply(textBody);
+           //  await sendTextMessage(from, phone_number_id, aiResponse);  
+        // }
+             
 
-                //await reply(textBody);//await sendInteractiveMessage(from, phone_number_id);
+               await sendInteractiveMessage(from, phone_number_id);
 
 
 
@@ -300,6 +304,73 @@ async function sendTimeOptions(to, phone_number_id) {
         console.error("Error enviando opciones de horario:", err.response?.data || err.message);
     }
 }
+
+
+async function sendasesor(to, phone_number_id) {
+    try {
+        await axios.post(
+            `https://graph.facebook.com/v17.0/${phone_number_id}/messages?access_token=${token}`,
+            {
+                messaging_product: "whatsapp",
+                to,
+                type: "interactive",
+                interactive: {
+                    type: "button",
+                    body: {
+                        text: "tenemos asesores a tu disposicion"
+                    },
+                    footer: {
+                        text: "Selecciona como deseas que se comuniquen contigo"
+                    },
+                    action: {
+                        buttons: [
+                            {
+                                type: "reply",
+                                reply: {
+                                    id: "ases_mensaje",
+                                    title: "10:00 AM"
+                                }
+                            },
+                            {
+                                type: "reply",
+                                reply: {
+                                    id: "ases_llamada",
+                                    title: "12:00 PM"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            { headers: { "Content-Type": "application/json" } }
+        );
+    } catch (err) {
+        console.error("Error enviando opciones de asesor:", err.response?.data || err.message);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
