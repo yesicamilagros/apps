@@ -124,7 +124,7 @@ app.post("/webhook", async (req, res) => {
              
 
                await sendInteractiveMessage(from, phone_number_id);
-
+              break;
 
 
             }
