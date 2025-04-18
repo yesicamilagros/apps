@@ -101,11 +101,11 @@ app.post("/webhook", async (req, res) => {
                         break;
 
                     case "ases_mensaje":
-                        await sendTextMessage(to, phone_number_id, "Puedes contactarnos por WhatsApp en este enlace: https://wa.me/1234567890");
+                        await sendTextMessage(from, phone_number_id, "Puedes contactarnos por WhatsApp en este enlace: https://wa.me/1234567890");
                         break;
                     
                     case "ases_llamada":
-                        await sendTextMessage(to, phone_number_id, "Llámanos al +913850688");
+                        await sendTextMessage(from, phone_number_id, "Llámanos al +913850688");
                         break;
 
 
