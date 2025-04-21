@@ -126,7 +126,7 @@ app.post("/webhook", async (req, res) => {
                     default:
                         await sendTextMessage(from, phone_number_id, "Opción no reconocida.");
 
-                iniciarTemporizadorInactividad(from, phone_number_id);
+                  await  iniciarTemporizadorInactividad(from, phone_number_id);
                 }
             } else {
                 // Si no es botón, mandamos el mensaje con los botones
@@ -139,7 +139,7 @@ app.post("/webhook", async (req, res) => {
              
 
                await sendInteractiveMessage(from, phone_number_id);
-                iniciarTemporizadorInactividad(from, phone_number_id); 
+               await iniciarTemporizadorInactividad(from, phone_number_id); 
               break;
 
 
