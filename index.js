@@ -397,7 +397,7 @@ async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
         console.error("Error enviando mensaje de inactividad:", err.message);
     }
     delete usuariosActivos[usuario];
-}, 2 * 60 * 1000);  // 5 minutos en ms
+}, 1 * 10 * 1000);  // 5 minutos en ms
 
     // Guardarlo en el mapa
     usuariosActivos[usuario] = timeoutID;
