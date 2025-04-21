@@ -87,15 +87,18 @@ app.post("/webhook", async (req, res) => {
                     case "btn_opcion_1":
                         await sendTextMessage(from, phone_number_id, "Perfecto, vamos a agendar tu cita.");
                          await sendAppointmentOptions(from, phone_number_id);
+                        await iniciarTemporizadorInactividad(from, phone_number_id); 
                         
   
                         break;
                     case "btn_opcion_2":
                        
                         await sendasesor(from, phone_number_id);
+                        await iniciarTemporizadorInactividad(from, phone_number_id); 
                         break;
                     case "btn_opcion_3":
                         await sendTextMessage(from, phone_number_id, "Aquí puedes ver nuestros servicios: depilzone.com/servicios");
+                        await iniciarTemporizadorInactividad(from, phone_number_id); 
                         break;
 
                     case "dia_lunes":
@@ -104,6 +107,7 @@ app.post("/webhook", async (req, res) => {
                    
                     await sendTextMessage(from, phone_number_id, "Excelente, selecciona un horario disponible:");
                    await sendTimeOptions(from, phone_number_id);
+                    await iniciarTemporizadorInactividad(from, phone_number_id); 
                         
                         break;
 
@@ -111,14 +115,17 @@ app.post("/webhook", async (req, res) => {
                     case "hora_12pm":
                     case "hora_4pm":
                         await sendTextMessage(from, phone_number_id, `Tu cita ha sido registrada para las ${buttonReplyID.split('_')[1].toUpperCase().replace('AM', ' AM').replace('PM', ' PM')}. ¡Gracias!`);
+                       
                         break;
 
                     case "ases_mensaje":
                         await sendTextMessage(from, phone_number_id, "Puedes contactarnos por WhatsApp en este enlace: https://wa.me/1234567890");
+                        await iniciarTemporizadorInactividad(from, phone_number_id); 
                         break;
                     
                     case "ases_llamada":
                         await sendTextMessage(from, phone_number_id, "Llámanos al +913850688");
+                        await iniciarTemporizadorInactividad(from, phone_number_id); 
                         break;
 
 
@@ -139,7 +146,7 @@ app.post("/webhook", async (req, res) => {
              
 
                await sendInteractiveMessage(from, phone_number_id);
-                iniciarTemporizadorInactividad(from, phone_number_id); 
+               await iniciarTemporizadorInactividad(from, phone_number_id); 
              
 
 
