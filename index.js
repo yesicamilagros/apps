@@ -140,7 +140,7 @@ app.post("/webhook", async (req, res) => {
 
                await sendInteractiveMessage(from, phone_number_id);
                await iniciarTemporizadorInactividad(from, phone_number_id); 
-              break;
+             
 
 
             }
@@ -381,7 +381,7 @@ async function sendasesor(to, phone_number_id) {
 
 
 
-async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
+ function iniciarTemporizadorInactividad(usuario, phone_number_id) {
 
      try {
     // Limpiar temporizadores anteriores si existen
@@ -398,7 +398,7 @@ async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
     // Guardarlo en el mapa
     usuariosActivos[usuario] = timeoutID;
 }  catch (err) {
-        console.error("Error enviando opciones de asesor:", err.response?.data || err.message);
+        console.error("Error en el temporizador de inactividad:", err.message);
     }
 }
 
