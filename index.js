@@ -7,6 +7,11 @@ const OpenAI= require('openai');
 const body_parser = require("body-parser");
 const axios = require("axios");
 require("dotenv").config();
+const usuariosActivos = {}; // Ej: { '5219999999999': timeoutID }
+
+
+
+
 
 const app = express().use(body_parser.json());
 
@@ -53,6 +58,14 @@ app.post("/webhook", async (req, res) => {
 
         if (message) {
             const from = message.from;
+            if (usuariosActivos[from]) {
+                                        clearTimeout(usuariosActivos[from]);
+                                        delete usuariosActivos[from];
+                                    }
+
+
+
+            
             const phone_number_id = value.metadata.phone_number_id;
 
             // Si es un mensaje de tipo texto
@@ -112,6 +125,8 @@ app.post("/webhook", async (req, res) => {
                     
                     default:
                         await sendTextMessage(from, phone_number_id, "Opción no reconocida.");
+
+                iniciarTemporizadorInactividad(from, phone_number_id);
                 }
             } else {
                 // Si no es botón, mandamos el mensaje con los botones
@@ -124,6 +139,7 @@ app.post("/webhook", async (req, res) => {
              
 
                await sendInteractiveMessage(from, phone_number_id);
+                iniciarTemporizadorInactividad(from, phone_number_id); 
               break;
 
 
@@ -365,6 +381,21 @@ async function sendasesor(to, phone_number_id) {
 
 
 
+function iniciarTemporizadorInactividad(usuario, phone_number_id) {
+    // Limpiar temporizadores anteriores si existen
+    if (usuariosActivos[usuario]) {
+        clearTimeout(usuariosActivos[usuario]);
+    }
+
+    // Crear nuevo timeout de 5 minutos
+    const timeoutID = setTimeout(() => {
+        sendTextMessage(usuario, phone_number_id, "¿Sigues ahí? Si necesitas ayuda, estoy disponible para ayudarte 💬.");
+        delete usuariosActivos[usuario]; // eliminar del registro
+    }, 5 * 60 * 1000); // 5 minutos en ms
+
+    // Guardarlo en el mapa
+    usuariosActivos[usuario] = timeoutID;
+}
 
 
 
