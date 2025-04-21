@@ -139,7 +139,7 @@ app.post("/webhook", async (req, res) => {
              
 
                await sendInteractiveMessage(from, phone_number_id);
-               await iniciarTemporizadorInactividad(from, phone_number_id); 
+                iniciarTemporizadorInactividad(from, phone_number_id); 
              
 
 
@@ -381,7 +381,7 @@ async function sendasesor(to, phone_number_id) {
 
 
 
- function iniciarTemporizadorInactividad(usuario, phone_number_id) {
+async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
 
      try {
     // Limpiar temporizadores anteriores si existen
