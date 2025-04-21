@@ -381,7 +381,9 @@ async function sendasesor(to, phone_number_id) {
 
 
 
-function iniciarTemporizadorInactividad(usuario, phone_number_id) {
+async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
+
+     try {
     // Limpiar temporizadores anteriores si existen
     if (usuariosActivos[usuario]) {
         clearTimeout(usuariosActivos[usuario]);
@@ -395,6 +397,9 @@ function iniciarTemporizadorInactividad(usuario, phone_number_id) {
 
     // Guardarlo en el mapa
     usuariosActivos[usuario] = timeoutID;
+}  catch (err) {
+        console.error("Error enviando opciones de asesor:", err.response?.data || err.message);
+    }
 }
 
 
