@@ -404,7 +404,7 @@ async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
         console.error("Error enviando mensaje de inactividad:", err.message);
       }
       delete usuariosActivos[usuario];
-    }, 5 * 60 * 1000); // ✅ 5 minutos
+    },   10 * 1000); // ✅ 5 minutos
 
     // Guardar el temporizador
     usuariosActivos[usuario] = timeoutID;
