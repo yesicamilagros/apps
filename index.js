@@ -390,10 +390,14 @@ async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
     }
 
     // Crear nuevo timeout de 5 minutos
-    const timeoutID = setTimeout(() => {
-        sendTextMessage(usuario, phone_number_id, "¿Sigues ahí? Si necesitas ayuda, estoy disponible para ayudarte 💬.");
-        delete usuariosActivos[usuario]; // eliminar del registro
-    }, 5 * 60 * 1000); // 5 minutos en ms
+    const timeoutID = setTimeout(async () => {
+    try {
+        await sendTextMessage(usuario, phone_number_id, "¿Sigues ahí? Si necesitas ayuda, estoy disponible para ayudarte 💬.");
+    } catch (err) {
+        console.error("Error enviando mensaje de inactividad:", err.message);
+    }
+    delete usuariosActivos[usuario];
+}, 5 * 60 * 1000);  // 5 minutos en ms
 
     // Guardarlo en el mapa
     usuariosActivos[usuario] = timeoutID;
