@@ -377,30 +377,41 @@ async function sendasesor(to, phone_number_id) {
 
 
 
-
-
-
-
 async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
-
-
+  try {
     // Limpiar temporizadores anteriores si existen
     if (usuariosActivos[usuario]) {
-        clearTimeout(usuariosActivos[usuario]);
+      clearTimeout(usuariosActivos[usuario]);
     }
 
     // Crear nuevo timeout de 5 minutos
     const timeoutID = setTimeout(async () => {
-    try {
-        await sendTextMessage(usuario, phone_number_id, "¿Sigues ahí? Si necesitas ayuda, estoy disponible para ayudarte 💬.");
-    } catch (err) {
+      try {
+        console.log(`⌛ Usuario ${usuario} inactivo. Enviando mensaje...`);
+        await sendTextMessage(
+          usuario,
+          phone_number_id,
+          "¿Sigues ahí? Si necesitas ayuda, estoy disponible para ayudarte 💬."
+        );
+      } catch (err) {
         console.error("Error enviando mensaje de inactividad:", err.message);
-    }
-    delete usuariosActivos[usuario];
-}, 1 * 10 * 1000);  // 5 minutos en ms
+      }
+      delete usuariosActivos[usuario];
+    }, 5 * 60 * 1000); // ✅ 5 minutos
 
-    // Guardarlo en el mapa
+    // Guardar el temporizador
     usuariosActivos[usuario] = timeoutID;
+    console.log(`⏱️ Temporizador iniciado para ${usuario}`);
+    
+  } catch (err) {
+    console.error("Error iniciando temporizador de inactividad:", err.message);
+  }
+}
+
+
+
+
+
 
 
 
