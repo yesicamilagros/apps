@@ -149,6 +149,7 @@ app.post("/webhook", async (req, res) => {
               await asistenteVentas(textBody);
 
             }
+             await asistenteVentas(textBody);
              await iniciarTemporizadorInactividad(from, phone_number_id); 
             return res.sendStatus(200);
         } else {
