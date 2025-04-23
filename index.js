@@ -140,13 +140,13 @@ app.post("/webhook", async (req, res) => {
 
          //if (){
              
-           //  const aiResponse = await reply(textBody);
-           //  await sendTextMessage(from, phone_number_id, aiResponse);  
+            const aiResponse = await asistenteVentas(textBody);
+             await sendTextMessage(from, phone_number_id, aiResponse);  
         // }
              
 
               // await sendInteractiveMessage(from, phone_number_id);
-              await asistenteVentas(textBody);
+              
 
             }
              //await asistenteVentas(textBody);
