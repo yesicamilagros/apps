@@ -483,7 +483,7 @@ async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
 async function llama4Groq(prompt, context = "") {
     try {
         const fullPrompt = context 
-            ? `${context}\n\nPor favor responde como asistente de ventas profesional:\n${prompt}`
+            ? `${context}\n\nPor favor responde como asistente de ventas profesional de la clinica Depilzone:\n${prompt}`
             : prompt;
 
         const res = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
