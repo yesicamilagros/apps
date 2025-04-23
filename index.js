@@ -498,7 +498,7 @@ async function llama4Groq(prompt, context = "") {
 
         if (!contienePalabraClave && !context) {
             return "¿Podrías replantear tu pregunta? Estoy especializado en información sobre: " + 
-                   palabrasClave.join(', ') + ". Por ejemplo: '¿Qué tratamientos tienen para el rostro?'";
+                   palabrasClave.join(', ') ;
         }
 
         const fullPrompt = context 
