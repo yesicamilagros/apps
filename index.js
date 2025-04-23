@@ -145,8 +145,8 @@ app.post("/webhook", async (req, res) => {
         // }
              
 
-               await sendInteractiveMessage(from, phone_number_id);
-              
+              // await sendInteractiveMessage(from, phone_number_id);
+              await asistenteVentas(textBody);
 
             }
              await iniciarTemporizadorInactividad(from, phone_number_id); 
@@ -402,7 +402,7 @@ async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
         console.error("Error enviando mensaje de inactividad:", err.message);
       }
       delete usuariosActivos[usuario];
-    },   10 * 1000); // ✅ 5 minutos
+    },   5*10 * 1000); // ✅ 5 minutos
 
     // Guardar el temporizador
     usuariosActivos[usuario] = timeoutID;
@@ -411,6 +411,138 @@ async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
   } catch (err) {
     console.error("Error iniciando temporizador de inactividad:", err.message);
   }
+}
+
+
+///////////////// modelo llama from qrot //////////////////////////
+
+
+  async function fetchSheetData() {
+    try {
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyUfCCoJWUAlQRuSE93r031i11UnzftTjwKVFJMrSYWLlZoENS2uobkA01BXGy-0wwC/exec"; // Ej: https://script.google.com/macros/s/.../exec
+    const response = await axios.get(scriptUrl);
+   // console.log(response.data); // Datos en JSON
+    return response.data;
+} catch (error) {
+    console.error("Error al obtener datos:", error);
+    throw error;
+  }
+  }
+
+
+  function buscarEnSheet(datos, subcadena, columnasExtraer = 3) {
+    const [headers, ...filas] = datos;
+    const subcadenaNormalizada = subcadena
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+
+    return filas.map(fila => {
+        // Encontrar el índice de la columna con coincidencia
+        const columnaMatch = fila.findIndex(valor => {
+            const valorNormalizado = valor?.toString()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase();
+            return valorNormalizado.includes(subcadenaNormalizada);
+        });
+
+        if (columnaMatch === -1) return null;
+
+        // Extraer datos siguientes y aplanar la estructura
+        const resultado = {
+            filaOriginal: fila.join(" | "), // Opcional: fila como string
+            columnaMatch: columnaMatch,
+            valorMatch: fila[columnaMatch],
+        };
+
+        // Añadir cada columna siguiente como propiedad separada
+        for (let i = 1; i <= columnasExtraer; i++) {
+            const colIndex = columnaMatch + i;
+            const header = headers[colIndex] || `Col${colIndex + 1}`;
+            resultado[`siguiente_${header}`] = fila[colIndex]; // Ej: "siguiente_País": "España"
+        }
+
+        return {
+            tratamiento: fila[columnaMatch],       // Ej: "Botox"
+            zona: fila[columnaMatch + 1],         // Ej: "Facial"
+            precio: fila[columnaMatch + 2],       // Ej: 200
+            detalles: fila[columnaMatch + 3] || "" // Ej: "Aplicación..."
+          };
+       
+    }).filter(Boolean);
+  
+   
+  }
+  
+
+///// ejemplo de wextraer la data de google sheet /////
+
+// 3. Tu función Groq mejorada
+async function llama4Groq(prompt, context = "") {
+    try {
+        const fullPrompt = context 
+            ? `${context}\n\nPor favor responde como asistente de ventas profesional:\n${prompt}`
+            : prompt;
+
+        const res = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+            model: "meta-llama/llama-4-scout-17b-16e-instruct",
+            messages: [{ 
+                role: "user", 
+                content: fullPrompt 
+            }],
+            temperature: 0.7
+        }, {
+            headers: {
+                "Authorization": `Bearer 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`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        return res.data.choices[0].message.content;
+    } catch (error) {
+        console.error("Error en Groq API:", error.response?.data || error.message);
+        return "Disculpa, estoy teniendo dificultades técnicas. Por favor intenta nuevamente más tarde.";
+    }
+}
+
+// 4. Función principal integrada
+async function asistenteVentas(consultaUsuario) {
+    try {
+        // Paso 1: Buscar en Google Sheets
+        const datos = await fetchSheetData();
+        const resultados = buscarEnSheet(datos, consultaUsuario);
+        
+        if (resultados.length === 0) {
+            return await llama4Groq(
+                "El cliente buscó '" + consultaUsuario + "' pero no encontré resultados. " +
+                "Responde amablemente que no tenemos ese tratamiento disponible " +
+                "y ofrece alternativas similares si existen."
+            );
+        }
+
+        // Paso 2: Crear contexto para la IA
+
+
+        const context = `Información de tratamientos disponibles: ${resultados.map(r => 
+         `- ${r.tratamiento} (${r.zona}): ${r.precio ? '$'+r.precio : 'precio bajo consulta'}${r.detalles ? '. Detalles: ' + r.detalles : ''}`
+         ).join('\n')}`;
+
+        // Paso 3: Generar respuesta inteligente
+        return await llama4Groq(
+            `El cliente preguntó por: "${consultaUsuario}".\n` +
+            `Genera una respuesta CALUROSA Y PROFESIONAL que:\n` +
+            `1. Mencione los tratamientos encontrados\n` +
+            `2. Pregunte por la zona de interés\n` +
+            `3. Ofrezca ayuda adicional\n` +
+            `4. Use emojis apropiados (máximo 3)`,
+            context
+        );
+
+    } catch (error) {
+        console.error("Error en asistenteVentas:", error);
+        return "¡Ups! Algo salió mal. Por favor intenta nuevamente.";
+    }
 }
 
 
@@ -437,6 +569,31 @@ async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////
 const chatMessages = [
     {
       role: 'system',
