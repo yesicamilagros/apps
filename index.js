@@ -58,10 +58,10 @@ app.post("/webhook", async (req, res) => {
 
         if (message) {
             const from = message.from;
-            if (usuariosActivos[from]) {
+           /* if (usuariosActivos[from]) {
                                         clearTimeout(usuariosActivos[from]);
                                         delete usuariosActivos[from];
-                                    }
+                                    } */
 
 
 
