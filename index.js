@@ -540,8 +540,7 @@ async function asistenteVentas(consultaUsuario) {
         if (resultados.length === 0) {
             return await llama4Groq(
                 "El cliente buscó '" + consultaUsuario + "' pero no encontré resultados. " +
-                "Responde amablemente que no tenemos ese tratamiento disponible " +
-                "y ofrece alternativas similares si existen."
+                "Responde amablemente que no tenemos ese tratamiento disponible " 
             );
         }
 
