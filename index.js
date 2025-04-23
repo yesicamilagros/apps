@@ -480,11 +480,30 @@ async function iniciarTemporizadorInactividad(usuario, phone_number_id) {
 ///// ejemplo de wextraer la data de google sheet /////
 
 // 3. Tu función Groq mejorada
+
+
+
+
+
 async function llama4Groq(prompt, context = "") {
     try {
+        // Palabras clave requeridas
+        const palabrasClave = ['promociones', 'tratamientos', 'zonas corporales'];
+        const promptLower = prompt.toLowerCase();
+        
+        // Verificar si el prompt contiene al menos una palabra clave
+        const contienePalabraClave = palabrasClave.some(palabra => 
+            promptLower.includes(palabra.toLowerCase())
+        );
+
+        if (!contienePalabraClave && !context) {
+            return "¿Podrías replantear tu pregunta? Estoy especializado en información sobre: " + 
+                   palabrasClave.join(', ') + ". Por ejemplo: '¿Qué tratamientos tienen para el rostro?'";
+        }
+
         const fullPrompt = context 
-            ? `${context}\n\nPor favor responde como asistente de ventas profesional de la clinica Depilzone:\n${prompt}`
-            : prompt;
+            ? `${context}\n\nPor favor responde como asistente de ventas profesional de la clínica Depilzone:\n${prompt}`
+            : `Como asistente de Depilzone, ${prompt}`;
 
         const res = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
             model: "meta-llama/llama-4-scout-17b-16e-instruct",
@@ -501,11 +520,15 @@ async function llama4Groq(prompt, context = "") {
         });
 
         return res.data.choices[0].message.content;
+
     } catch (error) {
         console.error("Error en Groq API:", error.response?.data || error.message);
         return "Disculpa, estoy teniendo dificultades técnicas. Por favor intenta nuevamente más tarde.";
     }
 }
+
+
+
 
 // 4. Función principal integrada
 async function asistenteVentas(consultaUsuario) {
